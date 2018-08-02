@@ -1,0 +1,36 @@
+diff -Naur minetest.0/src/game.cpp minetest.1/src/game.cpp
+--- minetest.0/src/game.cpp	2018-08-01 11:29:34.166342432 -0700
++++ minetest.1/src/game.cpp	2018-08-01 11:31:11.901997892 -0700
+@@ -2429,7 +2429,8 @@
+ 			( (u32)(isKeyDown(KeyType::SPECIAL1)                      & 0x1) << 5) |
+ 			( (u32)(isKeyDown(KeyType::SNEAK)                         & 0x1) << 6) |
+ 			( (u32)(input->getLeftState()                             & 0x1) << 7) |
+-			( (u32)(input->getRightState()                            & 0x1) << 8
++			( (u32)(input->getRightState()                            & 0x1) << 8) |
++			( (u32)(isKeyDown(KeyType::ZOOM)                          & 0x1) << 9
+ 		);
+ 
+ #ifdef ANDROID
+diff -Naur minetest.0/src/network/serverpackethandler.cpp minetest.1/src/network/serverpackethandler.cpp
+--- minetest.0/src/network/serverpackethandler.cpp	2018-08-01 11:29:48.039151586 -0700
++++ minetest.1/src/network/serverpackethandler.cpp	2018-08-01 11:19:20.200788662 -0700
+@@ -487,6 +487,7 @@
+ 	player->control.sneak = (keyPressed & 64);
+ 	player->control.LMB = (keyPressed & 128);
+ 	player->control.RMB = (keyPressed & 256);
++	player->control.zoom = (keyPressed & 512);
+ 
+ 	if (playersao->checkMovementCheat()) {
+ 		// Call callbacks
+diff -Naur minetest.0/src/script/lua_api/l_object.cpp minetest.1/src/script/lua_api/l_object.cpp
+--- minetest.0/src/script/lua_api/l_object.cpp	2018-08-01 11:30:00.373981909 -0700
++++ minetest.1/src/script/lua_api/l_object.cpp	2018-08-01 11:20:32.063800075 -0700
+@@ -1341,6 +1341,8 @@
+ 	lua_setfield(L, -2, "LMB");
+ 	lua_pushboolean(L, control.RMB);
+ 	lua_setfield(L, -2, "RMB");
++	lua_pushboolean(L, control.zoom);
++	lua_setfield(L, -2, "zoom");
+ 	return 1;
+ }
+ 
