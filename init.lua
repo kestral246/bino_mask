@@ -22,8 +22,8 @@ minetest.register_globalstep(function(dtime)
     local players = minetest.get_connected_players()
     for i,player in ipairs(players) do
         local pname = player:get_player_name()
-        local screen_w = minetest.setting_get("screen_w")
-        local screen_h = minetest.setting_get("screen_h")
+        local screen_w = minetest.settings:get("screen_w") or 1600
+        local screen_h = minetest.settings:get("screen_h") or 900
         local aspect = screen_w / screen_h
         local xscale = 0
         local yscale = 0
